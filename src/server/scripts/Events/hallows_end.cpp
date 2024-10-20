@@ -275,6 +275,9 @@ enum costumedOrphan
     TALK_SHADE_FAILED                       = 4,
     TALK_SHADE_DEFEATED                     = 5,
     TALK_SHADE_DEATH                        = 6,
+
+    // Items
+    WATER_BUCKET                            = 32971
 };
 
 class spell_hallows_end_bucket_lands : public SpellScript
@@ -570,7 +573,18 @@ struct npc_soh_fire_trigger : public NullCreatureAI
         {
             // Had to make this a little easier, this is so effing hard when soloing.
             me->RemoveAllAuras();
-            me->Say("Doused", LANG_UNIVERSAL);
+            if (caster->IsPlayer()) {
+                Player * p = caster->ToPlayer();
+                ItemPosCountVec dest;
+                uint32 noSpaceForCount = 0;
+                InventoryResult msg = p->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, WATER_BUCKET, 1, &noSpaceForCount);
+                if (msg != EQUIP_ERR_OK || dest.empty()) // can't add any
+                {
+                    return;
+                }
+
+                Item* item = p->StoreNewItem(dest, WATER_BUCKET, true);
+            }
         }
     }
 };
