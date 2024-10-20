@@ -570,6 +570,7 @@ struct npc_soh_fire_trigger : public NullCreatureAI
         {
             // Had to make this a little easier, this is so effing hard when soloing.
             me->RemoveAllAuras();
+            me->Say("Doused", LANG_UNIVERSAL);
         }
     }
 };
