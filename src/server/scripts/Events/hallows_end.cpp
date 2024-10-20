@@ -568,19 +568,8 @@ struct npc_soh_fire_trigger : public NullCreatureAI
         }
         else if (spellInfo->Id == SPELL_WATER_SPLASH)
         {
-            if (AuraEffect* aurEff = me->GetAuraEffect(SPELL_FIRE_AURA_BASE, EFFECT_0))
-            {
-                // int32 amt = aurEff->GetAmount();
-                // if (amt > 2)
-                // {
-                //     aurEff->ResetPeriodic(true);
-                //     aurEff->SetAmount(amt - 2);
-                // }
-                // else
-
-                // Had to make this a little easier, this is so effing hard when soloing.
-                me->RemoveAllAuras();
-            }
+            // Had to make this a little easier, this is so effing hard when soloing.
+            me->RemoveAllAuras();
         }
     }
 };
