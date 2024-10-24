@@ -302,8 +302,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket& recvData)
         }
 
         // check if target is globally visible for player
-        if ((_player->GetGUID() != target.GetGuid() && !target.IsVisible()) &&
-            (AccountMgr::IsPlayerAccount(_player->GetSession()->GetSecurity()) || target.GetSecurity() > _player->GetSession()->GetSecurity()))
+        if ((_player->GetGUID() != target.GetGuid() && !target.IsVisible()))
         {
             continue;
         }
