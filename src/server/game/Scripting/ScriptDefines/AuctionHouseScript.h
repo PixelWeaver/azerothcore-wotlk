@@ -49,7 +49,7 @@ public:
     // Called when an auction is removed from an auction house.
     virtual void OnAuctionRemove(AuctionHouseObject* /*ah*/, AuctionEntry* /*entry*/) { }
 
-    // Called when an auction was succesfully completed.
+    // Called when an auction was successfully completed.
     virtual void OnAuctionSuccessful(AuctionHouseObject* /*ah*/, AuctionEntry* /*entry*/) { }
 
     // Called when an auction expires.
