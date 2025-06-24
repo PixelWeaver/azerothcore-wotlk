@@ -114,11 +114,6 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "*.ipp": "cpp",
-        "resumable": "cpp",
-        "stdfloat": "cpp"
-    },
-    "deno.enable": true,
-    "deno.path": "deps/deno/bin/deno",
-    "deno.lint": true,
-    "C_Cpp.errorSquiggles": "enabled"
+        "resumable": "cpp"
+    }
 }

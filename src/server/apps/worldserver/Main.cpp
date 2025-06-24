@@ -47,7 +47,9 @@
 #include "ScriptMgr.h"
 #include "SecretMgr.h"
 #include "SharedDefines.h"
+#include "SteadyTimer.h"
 #include "World.h"
+#include "WorldSessionMgr.h"
 #include "WorldSocket.h"
 #include "WorldSocketMgr.h"
 #include <boost/asio/signal_set.hpp>
@@ -90,9 +92,7 @@ public:
 
     static void Start(std::shared_ptr<FreezeDetector> const& freezeDetector)
     {
-        // Calculate the expiration time 5seconds from now
-        auto expirationTime = std::chrono::steady_clock::now() + std::chrono::seconds(5);
-        freezeDetector->_timer.expires_at(expirationTime);
+        freezeDetector->_timer.expires_at(Acore::Asio::SteadyTimer::GetExpirationTime(5));
         freezeDetector->_timer.async_wait(std::bind(&FreezeDetector::Handler, std::weak_ptr<FreezeDetector>(freezeDetector), std::placeholders::_1));
     }
 
@@ -286,7 +286,7 @@ int main(int argc, char** argv)
 
     sMetric->Initialize(realm.Name, *ioContext, []()
     {
-        METRIC_VALUE("online_players", sWorld->GetPlayerCount());
+        METRIC_VALUE("online_players", sWorldSessionMgr->GetPlayerCount());
         METRIC_VALUE("db_queue_login", uint64(LoginDatabase.QueueSize()));
         METRIC_VALUE("db_queue_character", uint64(CharacterDatabase.QueueSize()));
         METRIC_VALUE("db_queue_world", uint64(WorldDatabase.QueueSize()));
@@ -358,8 +358,8 @@ int main(int argc, char** argv)
 
     std::shared_ptr<void> sWorldSocketMgrHandle(nullptr, [](void*)
     {
-        sWorld->KickAll();              // save and kick all players
-        sWorld->UpdateSessions(1);      // real players unload required UpdateSessions call
+        sWorldSessionMgr->KickAll();         // save and kick all players
+        sWorldSessionMgr->UpdateSessions(1); // real players unload required UpdateSessions call
 
         sWorldSocketMgr.StopNetwork();
 
@@ -632,9 +632,7 @@ void FreezeDetector::Handler(std::weak_ptr<FreezeDetector> freezeDetectorRef, bo
                 }
             }
 
-            // Calculate the expiration time
-            auto expirationTime = std::chrono::steady_clock::now() + std::chrono::seconds(1);
-            freezeDetector->_timer.expires_at(expirationTime);
+            freezeDetector->_timer.expires_at(Acore::Asio::SteadyTimer::GetExpirationTime(1));
             freezeDetector->_timer.async_wait(std::bind(&FreezeDetector::Handler, freezeDetectorRef, std::placeholders::_1));
         }
     }
